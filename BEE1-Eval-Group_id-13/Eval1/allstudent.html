@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Students</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(120deg, #6a11cb, #2575fc);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin: 20px 0;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        table {
+            width: 90%;
+            max-width: 800px;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        th {
+            background: #6a11cb;
+            color: #fff;
+            font-weight: bold;
+            padding: 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            color: #555;
+        }
+
+        tr:nth-child(even) {
+            background: #f4f4f4;
+        }
+
+        tr:hover {
+            background: #eaf2ff;
+        }
+
+        .error-message {
+            margin-top: 20px;
+            color: #ff4c4c;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>All Students Data</h1>
+
+    <script>
+        document.getElementsByTagName("h1")[0].innerHTML = "Registered Users' Full Details";
+
+        fetch("http://localhost:3000")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data);
+                const table = document.createElement('table');
+                const headerRow = document.createElement('tr');
+                const headers = ['Name', 'Age', 'Guardian Name', 'Phone', 'Email', 'Message'];
+                headers.forEach(headerText => {
+                    const header = document.createElement('th');
+                    header.textContent = headerText;
+                    headerRow.appendChild(header);
+                });
+                table.appendChild(headerRow);
+
+                data.forEach(person => {
+                    const row = document.createElement('tr');
+
+                    const nameCell = document.createElement('td');
+
+                    const ageCell = document.createElement('td');
+                    const gnameCell = document.createElement('td');
+                    const phoneCell = document.createElement('td');
+                    const emailCell = document.createElement('td');
+
+                    const messageCell = document.createElement('td');
+
+
+                    nameCell.textContent = person.fname || 'N/A';
+                    ageCell.textContent = person.cage || 'N/A';
+                    gnameCell.textContent = person.gfname || 'N/A';
+                    phoneCell.textContent = person.fphone || 'N/A';
+                    emailCell.textContent = person.femail || 'N/A';
+                    messageCell.textContent = person.fmessage || 'N/A';
+
+
+                    row.appendChild(nameCell);
+                    row.appendChild(ageCell);
+                    row.appendChild(gnameCell);
+
+
+                    row.appendChild(phoneCell);
+                    row.appendChild(emailCell);
+                    row.appendChild(messageCell);
+
+                    table.appendChild(row);
+                });
+
+                document.body.appendChild(table);
+            })
+            .catch((error) => {
+                console.error("There was a problem with the fetch operation:", error);
+                const errorMessage = document.createElement('p');
+                errorMessage.textContent = "Failed to fetch student data. Please try again later.";
+                errorMessage.classList.add('error-message');
+                document.body.appendChild(errorMessage);
+            });
+    </script>
+</body>
+
+</html>
